@@ -41,13 +41,10 @@ class Library:
             if book.title == title:
                 return book.return_book()
         return "Book not found"
-
-
 # გამოყენება
 library = Library()
 library.add_book("Python Basics", "John Doe")
 library.add_book("Data Science", "Jane Doe")
-
 print(library.list_books())
 print(library.borrow_book("Python Basics"))
 print(library.list_books())
