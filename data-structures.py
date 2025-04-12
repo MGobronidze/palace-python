@@ -7,7 +7,7 @@ def add_user(user_id, name, age, city):
     if user_id in user_ids:
         print("❌ ეს ID უკვე არსებობს!")
         return
-    users_db[user_id] = [name, age, city]  # ინფორმაცია სიაში ვინახავთ
+    users_db[user_id] = [name, age, city]  # ინფორმაციას სიაში ვინახავთ
     user_ids.add(user_id)  # ID-ს ვამატებთ set-ში
     print(f"✅ {name} წარმატებით დაემატა!")
 
