@@ -1,46 +1,49 @@
-from collections import deque
+# Helper function for DFS-based cycle detection
+def isCyclicUtil(adj, u, visited, recStack):
+    # If the node is already in the current recursion stack, a cycle is detected
+    if recStack[u]:
+        return True
 
-# Function to find BFS of Graph from given source s
-def bfs(adj):
-    
-    # get number of vertices
-    V = len(adj)
-    
-    # create an array to store the traversal
-    res = []
-    s = 0
-    # Create a queue for BFS
-    q = deque()
-    
-    # Initially mark all the vertices as not visited
-    visited = [False] * V
-    
-    # Mark source node as visited and enqueue it
-    visited[s] = True
-    q.append(s)
-    
-    # Iterate over the queue
-    while q:
-        
-        # Dequeue a vertex from queue and store it
-        curr = q.popleft()
-        res.append(curr)
-        
-        # Get all adjacent vertices of the dequeued 
-        # vertex curr If an adjacent has not been 
-        # visited, mark it visited and enqueue it
-        for x in adj[curr]:
-            if not visited[x]:
-                visited[x] = True
-                q.append(x)
-                
-    return res
+    # If the node is already visited and not part of the recursion stack, skip it
+    if visited[u]:
+        return False
 
-if __name__ == "__main__":
-    
-    # create the adjacency list
-    # [ [2, 3, 1], [0], [0, 4], [0], [2] ]
-    adj = [[1,2], [0,2,3], [0,4], [1,4], [2,3]]
-    ans = bfs(adj)
-    for i in ans:
-        print(i, end=" ")
+    # Mark the current node as visited and add it to the recursion stack
+    visited[u] = True
+    recStack[u] = True
+
+    # Recur for all the adjacent vertices
+    for v in adj[u]:
+        if isCyclicUtil(adj, v, visited, recStack):
+            return True
+
+    # Remove the node from the recursion stack before returning
+    recStack[u] = False
+    return False
+
+# Function to build adjacency list from edge list
+def constructadj(V, edges):
+    adj = [[] for _ in range(V)]  # Create a list for each vertex
+    for u, v in edges:
+        adj[u].append(v)  # Add directed edge from u to v
+    return adj
+
+# Main function to detect cycle in the directed graph
+def isCyclic(V, edges):
+    adj = constructadj(V, edges)
+    visited = [False] * V       # To track visited vertices
+    recStack = [False] * V      # To track vertices in the current DFS path
+
+    # Try DFS from each vertex
+    for i in range(V):
+        if not visited[i] and isCyclicUtil(adj, i, visited, recStack):
+            return True  # Cycle found
+    return False  # No cycle found
+
+
+# Example usage
+V = 4  # Number of vertices
+edges = [[0, 1], [0, 2], [1, 2], [2, 0], [2, 3]]
+
+# Output: True, because there is a cycle (0 → 2 → 0)
+print(isCyclic(V, edges))
